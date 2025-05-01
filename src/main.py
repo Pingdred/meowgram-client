@@ -50,9 +50,11 @@ async def main():
         api_hash=os.getenv("API_HASH"),
         bot_token=os.getenv("BOT_TOKEN"),
         cat_url=os.getenv("CHESHIRE_CAT_URL", "localhost"),
-        cat_port=os.getenv("CHESHIRE_CAT_PORT", "1865")
+        cat_port=os.getenv("CHESHIRE_CAT_PORT", "1865"),
+        cat_secure_connection = os.getenv("SECURE_CONNECTION",False),
+        cat_ws_token=os.getenv("CHESHIRE_CAT_WS_TOKEN", "")
     )
-    
+
     try:
         await bot.run()
     except Exception as e:
