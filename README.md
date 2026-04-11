@@ -16,6 +16,7 @@ Before you begin, make sure you have the following:
 - A running instance of [Cheshire Cat](https://github.com/cheshire-cat-ai/core#quickstart) (version `>= 1.8.0`)
 - Telegram **API Hash**
 - A **Telegram bot TOKEN**, which you can get by creating a bot through [BotFather](https://core.telegram.org/bots/features#creating-a-new-bot)
+- *(Optional)* **Docker** and **Docker Compose** if you plan to run the bot in a container.
 
 ### Obtaining the API Hash
 
@@ -33,7 +34,7 @@ Follow these steps to get Meowgram up and running:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Pingdred/Meowgram.git
+   git clone [https://github.com/Pingdred/Meowgram.git](https://github.com/Pingdred/Meowgram.git)
    ```
 
 2. **Navigate to the project directory:**
@@ -42,32 +43,56 @@ Follow these steps to get Meowgram up and running:
    cd Meowgram
    ```
 
-3. **Install dependencies:**
+3. **Create a `.env` file** and set the following parameters. You can use the provided `.env.example` file as a template:
 
+   ```toml
+   # Telegram Credentials
+   API_ID = "YOUR_API_ID"
+   API_HASH = "YOUR_API_HASH"
+   BOT_TOKEN = "YOUR-BOT-TOKEN"
+
+   # Access Control (Comma-separated list of allowed Telegram IDs)
+   ACCESS_LIST = "123456789,987654321" 
+
+   # Cheshire Cat Connection
+   CHESHIRE_CAT_URL = "localhost"
+   CHESHIRE_CAT_PORT = 1865
+   
+   # Optional: Set this if your Cheshire Cat instance is protected by an API Key
+   CHESHIRE_CAT_AUTH_KEY = "your_secret_websocket_key"
+   ```
+
+> **Important:** > Ensure that your Cheshire Cat instance is running by following the [quick start guide](https://github.com/cheshire-cat-ai/core#quickstart). 
+> **Auto-Registration:** Meowgram will automatically register new allowed Telegram users into the Cheshire Cat's database upon their first interaction, ensuring seamless communication.
+
+---
+
+## Running Meowgram
+
+You can run Meowgram using either standard Python or Docker.
+
+### Option A: Standard Python
+
+1. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
-
-4. **Create a `.env` file** and set the following parameters:
-
-   ```toml
-   API_ID = "API_ID"
-   API_HASH = "API_HASH"
-   BOT_TOKEN = "YOUR-BOT-TOKEN"
-
-   CHESHIRE_CAT_URL = "localhost"
-   CHESHIRE_CAT_PORT = 1865
-   ```
-
-   You can use the provided `.env.example` file as a template.
-
-> **Important:**  
-> Ensure that your Cheshire Cat instance is running by following the [quick start guide](https://github.com/cheshire-cat-ai/core#quickstart).
-
-5. **Run Meowgram**:
-
+2. **Run the bot**:
    ```bash
    python src/main.py
+   ```
+
+### Option B: Docker Compose (Recommended)
+
+To run Meowgram effortlessly in the background as a container:
+
+1. Build and start the container:
+   ```bash
+   docker compose up -d --build
+   ```
+2. View the logs to ensure everything is working:
+   ```bash
+   docker logs meowgram_bot -f
    ```
 
 ---
