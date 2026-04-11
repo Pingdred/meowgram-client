@@ -1,6 +1,7 @@
 import json
 import asyncio
 import logging
+import os
 
 from aiohttp import ClientWebSocketResponse, ClientSession
 from typing import Optional, Callable
@@ -14,7 +15,15 @@ class CheshireCatClient:
     def __init__(self, base_url: str, port: int, user_id: str, message_callback: Callable):
         self.user_id = user_id
 
-        self.ws_url = f"ws://{base_url}:{port}/ws/{user_id}"
+        # WebSocket key for authentication (optional, depends on the Cheshire Cat configuration)
+        auth_key = os.getenv("CHESHIRE_CAT_AUTH_KEY")
+        
+        # Construct the WebSocket URL, including the auth key if present
+        if auth_key:
+            self.ws_url = f"ws://{base_url}:{port}/ws/{user_id}?token={auth_key}"
+        else:
+            self.ws_url = f"ws://{base_url}:{port}/ws/{user_id}"
+
         self.session: Optional[ClientSession] = None
         self.ws: Optional[ClientWebSocketResponse] = None
         # Callback che verrà chiamata quando arriva un messaggio

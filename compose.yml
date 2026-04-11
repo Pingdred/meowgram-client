@@ -1,0 +1,9 @@
+services:
+  meowgram:
+    build: .
+    container_name: meowgram_bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    network_mode: "host"
+    

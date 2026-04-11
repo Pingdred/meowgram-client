@@ -66,7 +66,7 @@ class NewMessageData(BaseModel):
             message_id=message.id,
             user_info=UserInfo(
                 id=sender.id,
-                username=sender.username,
+                username=sender.username or f"user_{sender.id}", # Fallback to a default username if the sender doesn't have one
                 first_name=sender.first_name,
                 last_name=sender.last_name
             )

@@ -6,6 +6,7 @@ import logging
 import asyncio
 import tempfile
 import requests
+import aiohttp
 
 from enum import Enum
 from dataclasses import dataclass
@@ -365,6 +366,34 @@ class MeowgramBot:
     
     # SECTION: Cheshire Cat connection management
 
+    async def create_cat_user_if_not_exists(self, telegram_id: int):
+            # HTTP of the cheshire cat API endpoint for user management
+            url = f"http://{self.cat_url}:{self.cat_port}/users/"
+            
+            # Let's use the same auth key for the HTTP API if present, otherwise we assume it's not needed
+            auth_key = os.getenv("CHESHIRE_CAT_AUTH_KEY")
+            headers = {"Authorization": f"Bearer {auth_key}"}
+            
+            # Prepare the payload with the Telegram ID as part of the username and password
+            payload = {
+                "username": f"tg_{telegram_id}",
+                "password": f"tg_pwd_{telegram_id}"
+            }
+            
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(url, json=payload, headers=headers) as response:
+                        if response.status == 200:
+                            self.logger.info(f"New user tg_{telegram_id} registered in the Cheshire Cat!")
+                        elif response.status == 403:
+                            # The Cheshire Cat returns 403 ("Cannot duplicate user") if the user already exists
+                            self.logger.debug(f"User tg_{telegram_id} already present in the database.")
+                        else:
+                            error_text = await response.text()
+                            self.logger.error(f"Impossible to register user: Status {response.status} - {error_text}")
+            except Exception as e:
+                self.logger.error(f"Error connecting to the Cheshire Cat HTTP API: {e}")
+
     async def ensure_cat_connection(self, user_id: int) -> CheshireCatClient | None:
         """
         Ensures there is an active connection to Cheshire Cat for the user.
@@ -375,6 +404,10 @@ class MeowgramBot:
 
         # Create a new connection if one does not exist
         if not cat_client:
+            
+            # Create the Cheshire Cat user if it does not exist. This is required to establish a WebSocket connection.
+            await self.create_cat_user_if_not_exists(user_id)
+
             cat_client = CheshireCatClient(
                 self.cat_url,
                 self.cat_port,
