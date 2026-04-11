@@ -34,7 +34,7 @@ Follow these steps to get Meowgram up and running:
 1. **Clone the repository:**
 
    ```bash
-   git clone [https://github.com/Pingdred/Meowgram.git](https://github.com/Pingdred/Meowgram.git)
+   git clone https://github.com/Pingdred/Meowgram.git
    ```
 
 2. **Navigate to the project directory:**
@@ -62,8 +62,11 @@ Follow these steps to get Meowgram up and running:
    CHESHIRE_CAT_AUTH_KEY = "your_secret_websocket_key"
    ```
 
-> **Important:** > Ensure that your Cheshire Cat instance is running by following the [quick start guide](https://github.com/cheshire-cat-ai/core#quickstart). 
-> **Auto-Registration:** Meowgram will automatically register new allowed Telegram users into the Cheshire Cat's database upon their first interaction, ensuring seamless communication.
+> **Important:**
+> Ensure that your Cheshire Cat instance is running by following the [quick start guide](https://github.com/cheshire-cat-ai/core#quickstart). 
+>
+> **Auto-Registration:** 
+> Meowgram will automatically register new allowed Telegram users into the Cheshire Cat's database upon their first interaction, ensuring seamless communication.
 
 ---
 
